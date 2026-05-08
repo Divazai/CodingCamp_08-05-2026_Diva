@@ -39,6 +39,10 @@ test('Property 6: adding a valid task always grows the list by one', () => {
       fc.string({ minLength: 1 }).filter(s => s.trim().length > 0),
       (tasks, description) => {
         resetState(tasks);
+        // Skip if description would be a duplicate (case-insensitive) of existing tasks
+        const trimmedLower = description.trim().toLowerCase();
+        const isDup = state.tasks.some(t => t.text.toLowerCase() === trimmedLower);
+        if (isDup) return; // pre-condition not met — skip this sample
         const before = state.tasks.length;
         addTask(description);
         expect(state.tasks.length).toBe(before + 1);

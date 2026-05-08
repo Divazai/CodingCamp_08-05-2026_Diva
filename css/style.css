@@ -1,404 +1,244 @@
 /* ============================================================
-   Personal Dashboard — css/style.css
-   Clean, modern dark theme
+   Personal Dashboard — Scrapbook Edition
+   Palette: white · light-green · light-yellow · ink
    ============================================================ */
 
-/* ---------- Reset & Base ---------- */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Dark theme (default) */
-:root,
-[data-theme="dark"] {
-  --bg:          #1a1a2e;
-  --surface:     #16213e;
-  --surface-alt: #0f3460;
-  --accent:      #e94560;
-  --accent-soft: #c73652;
-  --text:        #e0e0e0;
-  --text-muted:  #9a9ab0;
-  --border:      #2a2a4a;
-  --radius:      10px;
-  --shadow:      0 4px 20px rgba(0, 0, 0, 0.4);
-  --transition:  0.2s ease;
-  --link-color:  #6ab0f5;
-  --topbar-bg:   #12122a;
-}
-
-/* Light theme */
-[data-theme="light"] {
-  --bg:          #f0f2f5;
-  --surface:     #ffffff;
-  --surface-alt: #e8ecf1;
-  --accent:      #d63251;
-  --accent-soft: #b82845;
-  --text:        #1a1a2e;
-  --text-muted:  #6b7280;
-  --border:      #d1d5db;
-  --shadow:      0 4px 20px rgba(0, 0, 0, 0.08);
-  --link-color:  #2563eb;
-  --topbar-bg:   #e2e6ea;
-}
-
-html, body {
-  height: 100%;
-}
-
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 0;
-  line-height: 1.5;
-}
-
-/* ---------- Top Bar ---------- */
-.topbar {
-  background-color: var(--topbar-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0.6rem 1.5rem;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-#btn-theme-toggle {
-  background-color: var(--surface-alt);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 0.35rem 0.85rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: 20px;
-}
-
-#btn-theme-toggle:hover {
-  background-color: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-/* ---------- Dashboard Grid ---------- */
-.dashboard {
+/* ---------- Dashboard grid ---------- */
+.dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
 }
-
-/* ---------- Widget Base ---------- */
-.widget {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+@media (min-width: 640px) {
+  .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
 }
+@media (min-width: 1024px) {
+  .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.col-span-full { grid-column: 1 / -1; }
 
-.widget h2 {
+/* ---------- Tape strips ---------- */
+.tape {
+  position: absolute;
+  width: 64px;
+  height: 22px;
+  background: rgba(255, 241, 118, 0.75);
+  border: 1px solid rgba(200, 160, 0, 0.3);
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: rotate(-3deg);
+  pointer-events: none;
+  z-index: 10;
+}
+.tape::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 4px,
+    rgba(200,160,0,0.15) 4px,
+    rgba(200,160,0,0.15) 5px
+  );
+  border-radius: 2px;
+}
+.tape-top-left  { top: -10px; left: 24px; transform: rotate(-4deg); }
+.tape-top-right { top: -10px; right: 24px; transform: rotate(4deg); }
+.tape-top-center{ top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+
+/* ---------- Scrapbook inputs ---------- */
+.scrap-input {
+  background: #fffef7;
+  border: 2px solid #b8dfc4;
+  border-radius: 10px;
+  color: #2d3a2e;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.8rem;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  width: 100%;
+  outline: none;
+}
+.scrap-input:focus {
+  border-color: #7ec99a;
+  transform: scale(1.02) rotate(0.3deg);
+  box-shadow: 0 0 0 3px rgba(126,201,154,0.25);
+}
+.scrap-input::placeholder { color: #9ab09c; }
+
+/* ---------- Scrapbook buttons ---------- */
+.scrap-btn {
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 0.45rem 1rem;
+  font-family: 'Caveat', cursive;
   font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 0.25rem;
-}
-
-/* ---------- Greeting Widget ---------- */
-#greeting-widget {
-  grid-column: 1 / -1; /* span full width */
-  text-align: center;
-  padding: 2rem 1.5rem;
-}
-
-#clock {
-  font-size: 3rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
+  color: #2d3a2e;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.15s,
+              background-color 0.15s;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+.scrap-btn:hover {
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+}
+.scrap-btn:active {
+  transform: scale(0.93) rotate(-1deg) !important;
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+.scrap-btn:focus-visible {
+  outline: 3px solid #7ec99a;
+  outline-offset: 2px;
 }
 
-#date-display {
-  font-size: 1rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
-#greeting-message {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-  color: var(--text);
-}
-
-/* Name input row inside greeting widget */
-.name-input-row {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-
-.name-input-row input {
-  max-width: 220px;
-  text-align: center;
-}
-
-/* ---------- Timer Widget ---------- */
-#timer-widget {
-  align-items: center;
-  text-align: center;
-}
-
-#timer-display {
-  font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  margin: 0.5rem 0;
-}
-
-.timer-controls {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* ---------- To-Do Widget ---------- */
-#todo-widget {
-  min-width: 0;
-}
-
-.todo-input-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.todo-input-row input {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Task list — unstyled */
-#task-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
+/* ---------- Task list items ---------- */
 #task-list li {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.5rem;
-  border-radius: 6px;
-  background-color: var(--surface-alt);
-  transition: background-color var(--transition);
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: #f4faf6;
+  border: 1.5px solid #b8dfc4;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  color: #2d3a2e;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.2s,
+              background-color 0.15s;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
-
 #task-list li:hover {
-  background-color: var(--surface);
+  transform: translateX(4px) rotate(0.4deg);
+  box-shadow: 3px 3px 0 #b8dfc4;
+  background: #e8f5ec;
 }
-
 #task-list li input[type="checkbox"] {
-  accent-color: var(--accent);
-  width: 1rem;
-  height: 1rem;
+  accent-color: #3a8f5c;
+  width: 1.1rem;
+  height: 1.1rem;
   flex-shrink: 0;
   cursor: pointer;
+  transition: transform 0.15s;
 }
+#task-list li input[type="checkbox"]:hover { transform: scale(1.2); }
 
 .task-text {
   flex: 1;
-  font-size: 0.95rem;
   word-break: break-word;
+  transition: opacity 0.2s, text-decoration 0.2s;
 }
-
-/* Completed task visual distinction — Requirement 3.9 */
 .task-text.done {
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.5;
+  color: #7a9a7c;
 }
 
-/* ---------- Quick Links Widget ---------- */
-#links-widget {
-  min-width: 0;
-}
-
-.links-input-row {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.links-input-row input {
-  flex: 1;
-  min-width: 100px;
-}
-
-#links-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-/* Each link row — flex with link + delete button */
+/* ---------- Link items ---------- */
 .link-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.5rem;
-  border-radius: 6px;
-  background-color: var(--surface-alt);
-  transition: background-color var(--transition);
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: #fffde7;
+  border: 1.5px solid #fff176;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.2s,
+              background-color 0.15s;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
-
 .link-item:hover {
-  background-color: var(--surface);
+  transform: translateX(4px) rotate(0.4deg);
+  box-shadow: 3px 3px 0 #fff176;
+  background: #fff9c4;
 }
-
 .link-item a {
   flex: 1;
-  color: var(--link-color);
+  color: #3a8f5c;
   text-decoration: none;
-  font-size: 0.95rem;
-  word-break: break-all;
-  transition: color var(--transition);
-}
-
-.link-item a:hover {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-/* ---------- Buttons ---------- */
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.875rem;
   font-weight: 600;
-  background-color: var(--accent);
-  color: #fff;
-  transition: background-color var(--transition), transform var(--transition);
-  white-space: nowrap;
+  word-break: break-all;
+  transition: color 0.15s;
 }
+.link-item a:hover { color: #c8a000; text-decoration: underline; }
 
-button:hover {
-  background-color: var(--accent-soft);
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* Secondary / small delete buttons */
-.btn-delete,
-.btn-delete-link {
-  background-color: transparent;
-  color: var(--text-muted);
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  flex-shrink: 0;
-  transition: color var(--transition), background-color var(--transition);
-}
-
-.btn-delete:hover,
-.btn-delete-link:hover {
-  background-color: rgba(233, 69, 96, 0.15);
-  color: var(--accent);
-}
-
-/* Edit button */
+/* ---------- Small action buttons (edit / delete) ---------- */
 .btn-edit {
-  background-color: transparent;
-  color: var(--text-muted);
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
-  border-radius: 4px;
+  background: transparent;
+  border: 1.5px solid #b8dfc4;
+  border-radius: 7px;
+  color: #5a6b5c;
+  padding: 0.2rem 0.5rem;
+  font-family: 'Caveat', cursive;
+  font-size: 0.9rem;
+  cursor: pointer;
   flex-shrink: 0;
-  transition: color var(--transition), background-color var(--transition);
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+              background-color 0.15s, color 0.15s;
 }
-
 .btn-edit:hover {
-  background-color: rgba(106, 176, 245, 0.15);
-  color: #6ab0f5;
+  background: #d4edda;
+  color: #2d3a2e;
+  transform: scale(1.15) rotate(-2deg);
+}
+.btn-edit:active { transform: scale(0.9); }
+
+.btn-delete, .btn-delete-link {
+  background: transparent;
+  border: 1.5px solid #ffd0d0;
+  border-radius: 7px;
+  color: #c0706a;
+  padding: 0.2rem 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+              background-color 0.15s, color 0.15s;
+}
+.btn-delete:hover, .btn-delete-link:hover {
+  background: #ffe0e0;
+  color: #b91c1c;
+  transform: scale(1.2) rotate(5deg);
+}
+.btn-delete:active, .btn-delete-link:active { transform: scale(0.85) rotate(-5deg); }
+
+/* ---------- Error messages ---------- */
+.error-message { display: none; }
+.error-message.visible { display: block; animation: shake 0.4s ease; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f4faf6; }
+::-webkit-scrollbar-thumb { background: #b8dfc4; border-radius: 3px; }
+
+/* ---------- Keyframes ---------- */
+@keyframes popIn {
+  0%   { transform: scale(0.75) rotate(-4deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px) rotate(-1deg); }
+  40%     { transform: translateX(5px)  rotate(1deg); }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px); }
+}
+@keyframes floatPaper {
+  0%   { transform: translateY(0)    rotate(var(--r0)); opacity: 0.85; }
+  50%  { transform: translateY(-18px) rotate(var(--r1)); opacity: 0.7; }
+  100% { transform: translateY(0)    rotate(var(--r0)); opacity: 0.85; }
 }
 
-/* ---------- Inputs ---------- */
-input[type="text"],
-input[type="url"] {
-  background-color: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 0.9rem;
-  padding: 0.45rem 0.75rem;
-  transition: border-color var(--transition);
-  width: 100%;
-}
-
-input[type="text"]:focus,
-input[type="url"]:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type="text"]::placeholder,
-input[type="url"]::placeholder {
-  color: var(--text-muted);
-}
-
-/* Inline edit input inside task list */
-#task-list li input[type="text"] {
-  flex: 1;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-}
-
-/* ---------- Error Messages (hidden by default) ---------- */
-.error-message {
-  display: none;
-  color: var(--accent);
-  font-size: 0.8rem;
-  margin-top: 0.1rem;
-}
-
-/* ---------- Scrollbar (optional polish) ---------- */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
+/* ---------- Canvas background ---------- */
+#bg-canvas { opacity: 0.55; }

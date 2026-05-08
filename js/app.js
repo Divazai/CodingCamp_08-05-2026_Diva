@@ -69,15 +69,15 @@ function applyTheme(theme) {
 
 function initTheme() {
   if (typeof document === 'undefined') return;
-  const theme = loadTheme();
-  applyTheme(theme);
+  // This design is always light/scrapbook — theme toggle is a no-op placeholder
+  // kept for API compatibility with tests
   const btn = document.getElementById('btn-theme-toggle');
   if (btn) {
+    btn.textContent = '☀️ Light';
     btn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      saveTheme(next);
+      // playful wiggle feedback only
+      btn.classList.add('animate-wiggle');
+      setTimeout(() => btn.classList.remove('animate-wiggle'), 600);
     });
   }
 }
@@ -243,7 +243,8 @@ function addTask(description) {
   if (!validateTaskInput(description)) {
     if (errorEl) {
       errorEl.textContent = 'Task description cannot be empty.';
-      errorEl.style.display = 'block';
+      errorEl.classList.remove('hidden');
+      errorEl.classList.add('visible');
     }
     return;
   }
@@ -251,12 +252,16 @@ function addTask(description) {
   if (isDuplicateTask(description)) {
     if (errorEl) {
       errorEl.textContent = 'That task already exists.';
-      errorEl.style.display = 'block';
+      errorEl.classList.remove('hidden');
+      errorEl.classList.add('visible');
     }
     return;
   }
 
-  if (errorEl) errorEl.style.display = 'none';
+  if (errorEl) {
+    errorEl.classList.add('hidden');
+    errorEl.classList.remove('visible');
+  }
 
   const task = {
     id: crypto.randomUUID(),
@@ -315,26 +320,39 @@ function renderTasks() {
 
     const btnEdit = document.createElement('button');
     btnEdit.className = 'btn-edit';
-    btnEdit.textContent = 'Edit';
+    btnEdit.textContent = '✏️';
+    btnEdit.title = 'Edit';
     btnEdit.addEventListener('click', () => {
       const editInput = document.createElement('input');
       editInput.type = 'text';
       editInput.value = task.text;
+      editInput.className = 'scrap-input flex-1';
 
       const btnConfirm = document.createElement('button');
-      btnConfirm.textContent = 'Confirm';
+      btnConfirm.textContent = '✓';
+      btnConfirm.className = 'scrap-btn bg-green-light border-green-soft text-sm px-2';
       btnConfirm.addEventListener('click', () => {
         editTask(task.id, editInput.value);
+      });
+      editInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') editTask(task.id, editInput.value);
       });
 
       li.replaceChild(editInput, span);
       li.replaceChild(btnConfirm, btnEdit);
+      editInput.focus();
     });
 
     const btnDelete = document.createElement('button');
     btnDelete.className = 'btn-delete';
-    btnDelete.textContent = 'Delete';
-    btnDelete.addEventListener('click', () => deleteTask(task.id));
+    btnDelete.textContent = '×';
+    btnDelete.title = 'Delete';
+    btnDelete.addEventListener('click', () => {
+      li.style.transform = 'scale(0.8) rotate(5deg)';
+      li.style.opacity = '0';
+      li.style.transition = 'all 0.25s ease';
+      setTimeout(() => deleteTask(task.id), 220);
+    });
 
     li.appendChild(checkbox);
     li.appendChild(span);
@@ -382,13 +400,20 @@ function addLink(label, url) {
   if (!validateLinkInput(label, url)) {
     if (typeof document !== 'undefined') {
       const errorEl = document.getElementById('links-error');
-      if (errorEl) errorEl.style.display = 'block';
+      if (errorEl) {
+        errorEl.textContent = 'Both label and URL are required.';
+        errorEl.classList.remove('hidden');
+        errorEl.classList.add('visible');
+      }
     }
     return;
   }
   if (typeof document !== 'undefined') {
     const errorEl = document.getElementById('links-error');
-    if (errorEl) errorEl.style.display = 'none';
+    if (errorEl) {
+      errorEl.classList.add('hidden');
+      errorEl.classList.remove('visible');
+    }
   }
   const link = {
     id: crypto.randomUUID(),
@@ -425,7 +450,13 @@ function renderLinks() {
     const btnDelete = document.createElement('button');
     btnDelete.className = 'btn-delete-link';
     btnDelete.textContent = '×';
-    btnDelete.addEventListener('click', () => deleteLink(link.id));
+    btnDelete.title = 'Remove';
+    btnDelete.addEventListener('click', () => {
+      div.style.transform = 'scale(0.8) rotate(-5deg)';
+      div.style.opacity = '0';
+      div.style.transition = 'all 0.25s ease';
+      setTimeout(() => deleteLink(link.id), 220);
+    });
 
     div.appendChild(a);
     div.appendChild(btnDelete);
@@ -468,7 +499,110 @@ if (typeof document !== 'undefined') {
     initGreeting();
     tickClock();
     setInterval(tickClock, 1000);
+    initCanvas();
   });
+}
+
+// ─── CANVAS BACKGROUND ────────────────────────────────────────────────────────
+
+function initCanvas() {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Paper piece shapes: small rectangles, torn scraps, dots
+  const COLORS = ['#d4edda', '#fff9c4', '#b8dfc4', '#fff176', '#ffffff', '#e8f5ec'];
+  const pieces = [];
+  const PIECE_COUNT = 28;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Spawn pieces
+  for (let i = 0; i < PIECE_COUNT; i++) {
+    pieces.push(spawnPiece(true));
+  }
+
+  function spawnPiece(randomY) {
+    const w = 28 + Math.random() * 52;
+    const h = 18 + Math.random() * 36;
+    return {
+      x:     Math.random() * window.innerWidth,
+      y:     randomY ? Math.random() * window.innerHeight : window.innerHeight + h,
+      w, h,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      rot:   (Math.random() - 0.5) * 0.6,          // radians
+      rotV:  (Math.random() - 0.5) * 0.008,         // rotation velocity
+      vx:    (Math.random() - 0.5) * 0.4,           // horizontal drift
+      vy:    -(0.25 + Math.random() * 0.55),         // float upward
+      alpha: 0.55 + Math.random() * 0.35,
+      type:  Math.random() < 0.3 ? 'circle' : 'rect',
+    };
+  }
+
+  // Mouse parallax
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', (e) => {
+    mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+    my = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  function drawPiece(p) {
+    ctx.save();
+    ctx.globalAlpha = p.alpha;
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    ctx.lineWidth = 1;
+    if (p.type === 'circle') {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.w / 2, p.h / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      const r = 4;
+      ctx.beginPath();
+      ctx.moveTo(-p.w/2 + r, -p.h/2);
+      ctx.lineTo( p.w/2 - r, -p.h/2);
+      ctx.quadraticCurveTo( p.w/2, -p.h/2,  p.w/2, -p.h/2 + r);
+      ctx.lineTo( p.w/2,  p.h/2 - r);
+      ctx.quadraticCurveTo( p.w/2,  p.h/2,  p.w/2 - r,  p.h/2);
+      ctx.lineTo(-p.w/2 + r,  p.h/2);
+      ctx.quadraticCurveTo(-p.w/2,  p.h/2, -p.w/2,  p.h/2 - r);
+      ctx.lineTo(-p.w/2, -p.h/2 + r);
+      ctx.quadraticCurveTo(-p.w/2, -p.h/2, -p.w/2 + r, -p.h/2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    pieces.forEach((p, i) => {
+      // Gentle parallax nudge from mouse
+      p.x += p.vx + mx * 0.12;
+      p.y += p.vy + my * 0.08;
+      p.rot += p.rotV;
+
+      // Wrap around edges
+      if (p.y < -80)                  { pieces[i] = spawnPiece(false); pieces[i].y = canvas.height + 60; }
+      if (p.x < -80)                  p.x = canvas.width + 60;
+      if (p.x > canvas.width + 80)    p.x = -60;
+
+      drawPiece(p);
+    });
+
+    requestAnimationFrame(tick);
+  }
+  tick();
 }
 
 // ─── CONDITIONAL EXPORT (Node / test runner) ──────────────────────────────────
@@ -509,5 +643,6 @@ if (typeof module !== 'undefined') {
     deleteLink,
     renderLinks,
     initLinks,
+    initCanvas,
   };
 }
