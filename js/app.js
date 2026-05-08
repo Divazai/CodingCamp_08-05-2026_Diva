@@ -1,5 +1,5 @@
 // Personal Dashboard — js/app.js
-// Sections: STATE | STORAGE | GREETING | TIMER | TODO | LINKS | INIT
+// Sections: STATE | STORAGE | THEME | GREETING | TIMER | TODO | LINKS | INIT
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 
@@ -42,6 +42,46 @@ function saveLinks() {
   localStorage.setItem('pd_links', JSON.stringify(state.links));
 }
 
+function loadUserName() {
+  return localStorage.getItem('pd_username') || '';
+}
+
+function saveUserName(name) {
+  localStorage.setItem('pd_username', name);
+}
+
+function loadTheme() {
+  return localStorage.getItem('pd_theme') || 'dark';
+}
+
+function saveTheme(theme) {
+  localStorage.setItem('pd_theme', theme);
+}
+
+// ─── THEME ────────────────────────────────────────────────────────────────────
+
+function applyTheme(theme) {
+  if (typeof document === 'undefined') return;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('btn-theme-toggle');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+
+function initTheme() {
+  if (typeof document === 'undefined') return;
+  const theme = loadTheme();
+  applyTheme(theme);
+  const btn = document.getElementById('btn-theme-toggle');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      saveTheme(next);
+    });
+  }
+}
+
 // ─── GREETING ─────────────────────────────────────────────────────────────────
 
 function formatTime(date) {
@@ -68,6 +108,11 @@ function getGreeting(hour) {
   return 'Good Evening';
 }
 
+function buildGreetingMessage(hour, name) {
+  const base = getGreeting(hour);
+  return name ? `${base}, ${name}!` : base;
+}
+
 function tickClock() {
   if (typeof document === 'undefined') return;
   const now = new Date();
@@ -76,7 +121,34 @@ function tickClock() {
   const greetingEl = document.getElementById('greeting-message');
   if (clockEl) clockEl.textContent = formatTime(now);
   if (dateEl) dateEl.textContent = formatDate(now);
-  if (greetingEl) greetingEl.textContent = getGreeting(now.getHours());
+  if (greetingEl) {
+    const name = loadUserName();
+    greetingEl.textContent = buildGreetingMessage(now.getHours(), name);
+  }
+}
+
+function initGreeting() {
+  if (typeof document === 'undefined') return;
+  const nameInput = document.getElementById('name-input');
+  const btnSave = document.getElementById('btn-save-name');
+
+  // Pre-fill saved name
+  const saved = loadUserName();
+  if (nameInput && saved) nameInput.value = saved;
+
+  function saveName() {
+    if (!nameInput) return;
+    const name = nameInput.value.trim();
+    saveUserName(name);
+    tickClock(); // refresh greeting immediately
+  }
+
+  if (btnSave) btnSave.addEventListener('click', saveName);
+  if (nameInput) {
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveName();
+    });
+  }
 }
 
 // ─── TIMER ────────────────────────────────────────────────────────────────────
@@ -158,18 +230,34 @@ function validateTaskInput(value) {
   return value.trim().length > 0;
 }
 
+function isDuplicateTask(description) {
+  const trimmed = description.trim().toLowerCase();
+  return state.tasks.some(t => t.text.toLowerCase() === trimmed);
+}
+
 function addTask(description) {
+  const errorEl = typeof document !== 'undefined'
+    ? document.getElementById('todo-error')
+    : null;
+
   if (!validateTaskInput(description)) {
-    if (typeof document !== 'undefined') {
-      const errorEl = document.getElementById('todo-error');
-      if (errorEl) errorEl.style.display = 'block';
+    if (errorEl) {
+      errorEl.textContent = 'Task description cannot be empty.';
+      errorEl.style.display = 'block';
     }
     return;
   }
-  if (typeof document !== 'undefined') {
-    const errorEl = document.getElementById('todo-error');
-    if (errorEl) errorEl.style.display = 'none';
+
+  if (isDuplicateTask(description)) {
+    if (errorEl) {
+      errorEl.textContent = 'That task already exists.';
+      errorEl.style.display = 'block';
+    }
+    return;
   }
+
+  if (errorEl) errorEl.style.display = 'none';
+
   const task = {
     id: crypto.randomUUID(),
     text: description.trim(),
@@ -229,7 +317,6 @@ function renderTasks() {
     btnEdit.className = 'btn-edit';
     btnEdit.textContent = 'Edit';
     btnEdit.addEventListener('click', () => {
-      // Enter inline edit mode: replace span with input + confirm button
       const editInput = document.createElement('input');
       editInput.type = 'text';
       editInput.value = task.text;
@@ -266,7 +353,9 @@ function initTodo() {
     btnAdd.addEventListener('click', () => {
       if (input) {
         addTask(input.value);
-        if (validateTaskInput(input.value)) input.value = '';
+        if (validateTaskInput(input.value) && !isDuplicateTask(input.value)) {
+          input.value = '';
+        }
       }
     });
   }
@@ -275,7 +364,9 @@ function initTodo() {
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         addTask(input.value);
-        if (validateTaskInput(input.value)) input.value = '';
+        if (validateTaskInput(input.value) && !isDuplicateTask(input.value)) {
+          input.value = '';
+        }
       }
     });
   }
@@ -365,6 +456,7 @@ function initLinks() {
 
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     const loaded = loadState();
     state.tasks = loaded.tasks;
     state.links = loaded.links;
@@ -373,6 +465,7 @@ if (typeof document !== 'undefined') {
     initTimer();
     initTodo();
     initLinks();
+    initGreeting();
     tickClock();
     setInterval(tickClock, 1000);
   });
@@ -387,9 +480,15 @@ if (typeof module !== 'undefined') {
     loadState,
     saveTasks,
     saveLinks,
+    loadUserName,
+    saveUserName,
+    loadTheme,
+    saveTheme,
+    applyTheme,
     formatTime,
     formatDate,
     getGreeting,
+    buildGreetingMessage,
     tickClock,
     formatTimerDisplay,
     startTimer,
@@ -398,6 +497,7 @@ if (typeof module !== 'undefined') {
     tickTimer,
     initTimer,
     validateTaskInput,
+    isDuplicateTask,
     addTask,
     editTask,
     toggleTask,

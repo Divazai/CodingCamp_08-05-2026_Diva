@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <!-- Top bar: theme toggle -->
+  <header class="topbar">
+    <button id="btn-theme-toggle" aria-label="Toggle light/dark mode">🌙 Dark</button>
+  </header>
+
   <main class="dashboard">
 
     <!-- Greeting Widget -->
@@ -14,6 +20,10 @@
       <p id="clock"></p>
       <p id="date-display"></p>
       <h1 id="greeting-message"></h1>
+      <div class="name-input-row">
+        <input type="text" id="name-input" placeholder="Enter your name…" aria-label="Your name" maxlength="40">
+        <button id="btn-save-name">Save</button>
+      </div>
     </section>
 
     <!-- Timer Widget -->
