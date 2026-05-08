@@ -1,0 +1,342 @@
+/* ============================================================
+   Personal Dashboard — css/style.css
+   Clean, modern dark theme
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:          #1a1a2e;
+  --surface:     #16213e;
+  --surface-alt: #0f3460;
+  --accent:      #e94560;
+  --accent-soft: #c73652;
+  --text:        #e0e0e0;
+  --text-muted:  #9a9ab0;
+  --border:      #2a2a4a;
+  --radius:      10px;
+  --shadow:      0 4px 20px rgba(0, 0, 0, 0.4);
+  --transition:  0.2s ease;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ---------- Dashboard Grid ---------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ---------- Widget Base ---------- */
+.widget {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.widget h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+/* ---------- Greeting Widget ---------- */
+#greeting-widget {
+  grid-column: 1 / -1; /* span full width */
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+#clock {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+#date-display {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+#greeting-message {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  color: var(--text);
+}
+
+/* ---------- Timer Widget ---------- */
+#timer-widget {
+  align-items: center;
+  text-align: center;
+}
+
+#timer-display {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  margin: 0.5rem 0;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---------- To-Do Widget ---------- */
+#todo-widget {
+  min-width: 0;
+}
+
+.todo-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.todo-input-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Task list — unstyled */
+#task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#task-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--surface-alt);
+  transition: background-color var(--transition);
+}
+
+#task-list li:hover {
+  background-color: #1a3a5c;
+}
+
+#task-list li input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+/* Completed task visual distinction — Requirement 3.9 */
+.task-text.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* ---------- Quick Links Widget ---------- */
+#links-widget {
+  min-width: 0;
+}
+
+.links-input-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.links-input-row input {
+  flex: 1;
+  min-width: 100px;
+}
+
+#links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Each link row — flex with link + delete button */
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--surface-alt);
+  transition: background-color var(--transition);
+}
+
+.link-item:hover {
+  background-color: #1a3a5c;
+}
+
+.link-item a {
+  flex: 1;
+  color: #6ab0f5;
+  text-decoration: none;
+  font-size: 0.95rem;
+  word-break: break-all;
+  transition: color var(--transition);
+}
+
+.link-item a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: var(--accent);
+  color: #fff;
+  transition: background-color var(--transition), transform var(--transition);
+  white-space: nowrap;
+}
+
+button:hover {
+  background-color: var(--accent-soft);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Secondary / small delete buttons */
+.btn-delete,
+.btn-delete-link {
+  background-color: transparent;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.btn-delete:hover,
+.btn-delete-link:hover {
+  background-color: rgba(233, 69, 96, 0.15);
+  color: var(--accent);
+}
+
+/* Edit button */
+.btn-edit {
+  background-color: transparent;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.btn-edit:hover {
+  background-color: rgba(106, 176, 245, 0.15);
+  color: #6ab0f5;
+}
+
+/* ---------- Inputs ---------- */
+input[type="text"],
+input[type="url"] {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+  padding: 0.45rem 0.75rem;
+  transition: border-color var(--transition);
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type="text"]::placeholder,
+input[type="url"]::placeholder {
+  color: var(--text-muted);
+}
+
+/* Inline edit input inside task list */
+#task-list li input[type="text"] {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Error Messages (hidden by default) ---------- */
+.error-message {
+  display: none;
+  color: var(--accent);
+  font-size: 0.8rem;
+  margin-top: 0.1rem;
+}
+
+/* ---------- Scrollbar (optional polish) ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
