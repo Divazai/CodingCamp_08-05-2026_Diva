@@ -68,25 +68,23 @@
 
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="font-body bg-cream min-h-screen overflow-x-hidden">
+<body class="font-body min-h-screen overflow-x-hidden">
 
   <!-- ░░ Animated canvas background ░░ -->
   <canvas id="bg-canvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index:0"></canvas>
 
   <!-- ░░ Top bar ░░ -->
-  <header class="relative z-50 flex items-center justify-between px-6 py-3
-                 bg-white/80 backdrop-blur-sm border-b-2 border-green-soft
-                 shadow-sm">
-    <span class="font-hand text-2xl font-bold text-green-dark tracking-wide select-none">
+  <header class="topbar relative z-50 flex items-center justify-between px-6 py-3 shadow-sm">
+    <span class="font-hand text-2xl font-bold tracking-wide select-none topbar-title">
       📌 my dashboard
     </span>
     <button id="btn-theme-toggle"
-            class="group flex items-center gap-2 px-4 py-1.5 rounded-full
-                   bg-yellow-light border-2 border-yellow-mid font-hand text-base font-semibold text-ink
-                   shadow-scrapY transition-all duration-200
-                   hover:scale-110 hover:rotate-2 hover:bg-yellow-soft active:scale-95"
+            class="theme-toggle-btn group flex items-center gap-2 px-4 py-1.5 rounded-full
+                   font-hand text-base font-semibold
+                   transition-all duration-200
+                   hover:scale-110 hover:rotate-2 active:scale-95"
             aria-label="Toggle light/dark mode">
-      ☀️ Light
+      🌙 Dark
     </button>
   </header>
 
@@ -95,21 +93,20 @@
 
     <!-- ── Greeting Widget ── -->
     <section id="greeting-widget"
-             class="widget col-span-full bg-white border-2 border-green-soft rounded-2xl p-6 sm:p-8
-                    shadow-scrap rotate-[-0.4deg] hover:rotate-0
+             class="widget widget-green col-span-full rounded-2xl p-6 sm:p-8
+                    rotate-[-0.4deg] hover:rotate-0
                     transition-all duration-300 hover:scale-[1.01] hover:shadow-xl
                     relative overflow-hidden">
-      <!-- tape strip top -->
       <div class="tape tape-top-left"></div>
       <div class="tape tape-top-right"></div>
 
       <p id="clock"
-         class="font-hand text-5xl sm:text-7xl font-bold text-green-dark tabular-nums
+         class="font-hand text-5xl sm:text-7xl font-bold tabular-nums clock-text
                 drop-shadow-sm transition-all duration-300"></p>
       <p id="date-display"
-         class="font-hand text-xl text-inksoft mt-1"></p>
+         class="font-hand text-xl date-text mt-1"></p>
       <h1 id="greeting-message"
-          class="font-hand text-3xl sm:text-4xl font-bold text-ink mt-2
+          class="font-hand text-3xl sm:text-4xl font-bold greeting-text mt-2
                  transition-all duration-300"></h1>
 
       <div class="name-input-row flex gap-2 justify-center mt-4 flex-wrap">
@@ -118,66 +115,51 @@
                maxlength="40"
                aria-label="Your name"
                class="scrap-input text-center max-w-[200px]">
-        <button id="btn-save-name"
-                class="scrap-btn bg-green-light border-green-soft hover:bg-green-soft">
-          Save ✓
-        </button>
+        <button id="btn-save-name" class="scrap-btn btn-green">Save ✓</button>
       </div>
     </section>
 
     <!-- ── Timer Widget ── -->
     <section id="timer-widget"
-             class="widget bg-yellow-light border-2 border-yellow-mid rounded-2xl p-6
-                    shadow-scrapY rotate-[0.5deg] hover:rotate-0
+             class="widget widget-yellow rounded-2xl p-6
+                    rotate-[0.5deg] hover:rotate-0
                     transition-all duration-300 hover:scale-[1.02] hover:shadow-xl
                     flex flex-col items-center gap-4 relative overflow-hidden">
       <div class="tape tape-top-center"></div>
 
-      <h2 class="font-hand text-2xl font-bold text-ink tracking-wide">⏱ Focus Timer</h2>
+      <h2 class="font-hand text-2xl font-bold widget-heading">⏱ Focus Timer</h2>
 
       <p id="timer-display"
-         class="font-hand text-6xl sm:text-7xl font-bold text-ink tabular-nums
+         class="font-hand text-6xl sm:text-7xl font-bold tabular-nums timer-text
                 transition-all duration-200 select-none">25:00</p>
 
       <div class="timer-controls flex gap-3 flex-wrap justify-center">
-        <button id="btn-start"
-                class="scrap-btn bg-green-light border-green-soft hover:bg-green-soft hover:scale-110 hover:rotate-1">
-          ▶ Start
-        </button>
-        <button id="btn-stop"
-                class="scrap-btn bg-white border-green-soft hover:bg-green-light hover:scale-110 hover:-rotate-1">
-          ⏸ Stop
-        </button>
-        <button id="btn-reset"
-                class="scrap-btn bg-white border-yellow-mid hover:bg-yellow-soft hover:scale-110 hover:rotate-1">
-          ↺ Reset
-        </button>
+        <button id="btn-start"  class="scrap-btn btn-green hover:scale-110 hover:rotate-1">▶ Start</button>
+        <button id="btn-stop"   class="scrap-btn btn-ghost hover:scale-110 hover:-rotate-1">⏸ Stop</button>
+        <button id="btn-reset"  class="scrap-btn btn-yellow hover:scale-110 hover:rotate-1">↺ Reset</button>
       </div>
     </section>
 
     <!-- ── To-Do Widget ── -->
     <section id="todo-widget"
-             class="widget bg-white border-2 border-green-soft rounded-2xl p-6
-                    shadow-scrap rotate-[-0.3deg] hover:rotate-0
+             class="widget widget-green rounded-2xl p-6
+                    rotate-[-0.3deg] hover:rotate-0
                     transition-all duration-300 hover:scale-[1.01] hover:shadow-xl
                     flex flex-col gap-3 relative overflow-hidden">
       <div class="tape tape-top-left"></div>
 
-      <h2 class="font-hand text-2xl font-bold text-ink">📝 To-Do</h2>
+      <h2 class="font-hand text-2xl font-bold widget-heading">📝 To-Do</h2>
 
       <div class="todo-input-row flex gap-2">
         <input type="text" id="todo-input"
                placeholder="Add a task…"
                aria-label="New task description"
                class="scrap-input flex-1 min-w-0">
-        <button id="btn-add-task"
-                class="scrap-btn bg-green-light border-green-soft hover:bg-green-soft hover:scale-110 hover:rotate-1 flex-shrink-0">
-          + Add
-        </button>
+        <button id="btn-add-task" class="scrap-btn btn-green hover:scale-110 hover:rotate-1 flex-shrink-0">+ Add</button>
       </div>
 
       <p id="todo-error"
-         class="error-message font-hand text-base text-red-500 hidden"
+         class="error-message font-hand text-base hidden"
          role="alert" aria-live="polite"></p>
 
       <ul id="task-list" class="flex flex-col gap-2 mt-1"></ul>
@@ -185,13 +167,13 @@
 
     <!-- ── Quick Links Widget ── -->
     <section id="links-widget"
-             class="widget bg-yellow-light border-2 border-yellow-mid rounded-2xl p-6
-                    shadow-scrapY rotate-[0.3deg] hover:rotate-0
+             class="widget widget-yellow rounded-2xl p-6
+                    rotate-[0.3deg] hover:rotate-0
                     transition-all duration-300 hover:scale-[1.01] hover:shadow-xl
                     flex flex-col gap-3 relative overflow-hidden">
       <div class="tape tape-top-right"></div>
 
-      <h2 class="font-hand text-2xl font-bold text-ink">🔗 Quick Links</h2>
+      <h2 class="font-hand text-2xl font-bold widget-heading">🔗 Quick Links</h2>
 
       <div class="links-input-row flex gap-2 flex-wrap">
         <input type="text" id="link-label-input"
@@ -202,14 +184,11 @@
                placeholder="https://…"
                aria-label="Link URL"
                class="scrap-input flex-1 min-w-[120px]">
-        <button id="btn-add-link"
-                class="scrap-btn bg-white border-yellow-mid hover:bg-yellow-soft hover:scale-110 hover:rotate-1 flex-shrink-0">
-          + Add
-        </button>
+        <button id="btn-add-link" class="scrap-btn btn-yellow hover:scale-110 hover:rotate-1 flex-shrink-0">+ Add</button>
       </div>
 
       <p id="links-error"
-         class="error-message font-hand text-base text-red-500 hidden"
+         class="error-message font-hand text-base hidden"
          role="alert" aria-live="polite"></p>
 
       <div id="links-list" class="flex flex-col gap-2 mt-1"></div>

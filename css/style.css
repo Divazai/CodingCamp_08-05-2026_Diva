@@ -1,12 +1,224 @@
 /* ============================================================
    Personal Dashboard — Scrapbook Edition
-   Palette: white · light-green · light-yellow · ink
+   Light mode: white · light-green · light-yellow
+   Dark  mode: deep forest · warm dark · amber glow
    ============================================================ */
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ---------- Dashboard grid ---------- */
+/* ══════════════════════════════════════════════════════════
+   LIGHT MODE (default)
+   ══════════════════════════════════════════════════════════ */
+:root,
+html[data-theme="light"] {
+  /* backgrounds */
+  --bg:              #fffef7;
+  --topbar-bg:       rgba(255,255,255,0.85);
+  --topbar-border:   #b8dfc4;
+
+  /* widget surfaces */
+  --widget-green-bg:     #ffffff;
+  --widget-green-border: #b8dfc4;
+  --widget-green-shadow: 3px 3px 0 #b8dfc4, 6px 6px 0 rgba(0,0,0,0.05);
+
+  --widget-yellow-bg:     #fff9c4;
+  --widget-yellow-border: #f9d84a;
+  --widget-yellow-shadow: 3px 3px 0 #fff176, 6px 6px 0 rgba(0,0,0,0.05);
+
+  /* text */
+  --text-primary:  #2d3a2e;
+  --text-secondary:#5a6b5c;
+  --text-accent:   #3a8f5c;
+  --text-clock:    #3a8f5c;
+  --text-timer:    #2d3a2e;
+  --text-error:    #dc2626;
+
+  /* inputs */
+  --input-bg:      #fffef7;
+  --input-border:  #b8dfc4;
+  --input-focus:   #7ec99a;
+  --input-placeholder: #9ab09c;
+  --input-text:    #2d3a2e;
+
+  /* buttons */
+  --btn-green-bg:     #d4edda;
+  --btn-green-border: #b8dfc4;
+  --btn-green-hover:  #b8dfc4;
+  --btn-yellow-bg:    #fff9c4;
+  --btn-yellow-border:#f9d84a;
+  --btn-yellow-hover: #fff176;
+  --btn-ghost-bg:     #ffffff;
+  --btn-ghost-border: #b8dfc4;
+  --btn-ghost-hover:  #d4edda;
+  --btn-text:         #2d3a2e;
+
+  /* task / link rows */
+  --task-bg:       #f4faf6;
+  --task-border:   #b8dfc4;
+  --task-hover-bg: #e8f5ec;
+  --task-hover-shadow: 3px 3px 0 #b8dfc4;
+  --link-bg:       #fffde7;
+  --link-border:   #fff176;
+  --link-hover-bg: #fff9c4;
+  --link-hover-shadow: 3px 3px 0 #fff176;
+  --link-color:    #3a8f5c;
+  --link-hover-color: #c8a000;
+
+  /* small buttons */
+  --edit-border:   #b8dfc4;
+  --edit-color:    #5a6b5c;
+  --edit-hover-bg: #d4edda;
+  --del-border:    #ffd0d0;
+  --del-color:     #c0706a;
+  --del-hover-bg:  #ffe0e0;
+  --del-hover-color:#b91c1c;
+
+  /* tape */
+  --tape-bg:       rgba(255,241,118,0.78);
+  --tape-border:   rgba(200,160,0,0.3);
+  --tape-stripe:   rgba(200,160,0,0.15);
+
+  /* scrollbar */
+  --scroll-track:  #f4faf6;
+  --scroll-thumb:  #b8dfc4;
+
+  /* canvas pieces */
+  --canvas-opacity: 0.55;
+
+  /* topbar title */
+  --topbar-title:  #3a8f5c;
+
+  /* toggle button */
+  --toggle-bg:     #fff9c4;
+  --toggle-border: #f9d84a;
+  --toggle-text:   #2d3a2e;
+  --toggle-hover:  #fff176;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════════════════════════ */
+html[data-theme="dark"] {
+  --bg:              #1a2b1e;
+  --topbar-bg:       rgba(18,30,20,0.92);
+  --topbar-border:   #2e5235;
+
+  --widget-green-bg:     #1e3324;
+  --widget-green-border: #2e5235;
+  --widget-green-shadow: 3px 3px 0 #2e5235, 6px 6px 0 rgba(0,0,0,0.3);
+
+  --widget-yellow-bg:     #2a2510;
+  --widget-yellow-border: #6b5a00;
+  --widget-yellow-shadow: 3px 3px 0 #6b5a00, 6px 6px 0 rgba(0,0,0,0.3);
+
+  --text-primary:  #e8f5ec;
+  --text-secondary:#8fad94;
+  --text-accent:   #7ec99a;
+  --text-clock:    #7ec99a;
+  --text-timer:    #fff9c4;
+  --text-error:    #f87171;
+
+  --input-bg:      #162219;
+  --input-border:  #2e5235;
+  --input-focus:   #7ec99a;
+  --input-placeholder: #4a6b50;
+  --input-text:    #e8f5ec;
+
+  --btn-green-bg:     #2e5235;
+  --btn-green-border: #3a8f5c;
+  --btn-green-hover:  #3a8f5c;
+  --btn-yellow-bg:    #3a3010;
+  --btn-yellow-border:#c8a000;
+  --btn-yellow-hover: #6b5a00;
+  --btn-ghost-bg:     #1e3324;
+  --btn-ghost-border: #2e5235;
+  --btn-ghost-hover:  #2e5235;
+  --btn-text:         #e8f5ec;
+
+  --task-bg:       #162219;
+  --task-border:   #2e5235;
+  --task-hover-bg: #1e3324;
+  --task-hover-shadow: 3px 3px 0 #2e5235;
+  --link-bg:       #221e08;
+  --link-border:   #6b5a00;
+  --link-hover-bg: #2a2510;
+  --link-hover-shadow: 3px 3px 0 #6b5a00;
+  --link-color:    #7ec99a;
+  --link-hover-color: #f9d84a;
+
+  --edit-border:   #2e5235;
+  --edit-color:    #8fad94;
+  --edit-hover-bg: #2e5235;
+  --del-border:    #5a2020;
+  --del-color:     #f87171;
+  --del-hover-bg:  #3a1515;
+  --del-hover-color:#fca5a5;
+
+  --tape-bg:       rgba(180,140,0,0.45);
+  --tape-border:   rgba(200,160,0,0.2);
+  --tape-stripe:   rgba(200,160,0,0.1);
+
+  --scroll-track:  #162219;
+  --scroll-thumb:  #2e5235;
+
+  --canvas-opacity: 0.35;
+
+  --topbar-title:  #7ec99a;
+
+  --toggle-bg:     #2a2510;
+  --toggle-border: #c8a000;
+  --toggle-text:   #fff9c4;
+  --toggle-hover:  #3a3010;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════ */
+html, body { height: 100%; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 0;
+  line-height: 1.5;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════════════════════════════ */
+.topbar {
+  background: var(--topbar-bg);
+  border-bottom: 2px solid var(--topbar-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.topbar-title { color: var(--topbar-title); transition: color 0.35s ease; }
+
+.theme-toggle-btn {
+  background-color: var(--toggle-bg);
+  border: 2px solid var(--toggle-border);
+  color: var(--toggle-text);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.12);
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s,
+              transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s;
+}
+.theme-toggle-btn:hover {
+  background-color: var(--toggle-hover);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD GRID
+   ══════════════════════════════════════════════════════════ */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -15,23 +227,54 @@
 @media (min-width: 640px) {
   .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (min-width: 1024px) {
-  .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-}
 .col-span-full { grid-column: 1 / -1; }
 
-/* ---------- Tape strips ---------- */
+/* ══════════════════════════════════════════════════════════
+   WIDGETS
+   ══════════════════════════════════════════════════════════ */
+.widget {
+  border-width: 2px;
+  border-style: solid;
+  transition: background-color 0.35s ease, border-color 0.35s ease,
+              box-shadow 0.35s ease, transform 0.3s ease;
+}
+
+.widget-green {
+  background-color: var(--widget-green-bg);
+  border-color: var(--widget-green-border);
+  box-shadow: var(--widget-green-shadow);
+}
+.widget-yellow {
+  background-color: var(--widget-yellow-bg);
+  border-color: var(--widget-yellow-border);
+  box-shadow: var(--widget-yellow-shadow);
+}
+
+.widget-heading {
+  color: var(--text-primary);
+  transition: color 0.35s ease;
+}
+
+/* Clock / date / greeting text */
+.clock-text    { color: var(--text-clock);     transition: color 0.35s ease; }
+.date-text     { color: var(--text-secondary); transition: color 0.35s ease; }
+.greeting-text { color: var(--text-primary);   transition: color 0.35s ease; }
+.timer-text    { color: var(--text-timer);      transition: color 0.35s ease; }
+
+/* ══════════════════════════════════════════════════════════
+   TAPE STRIPS
+   ══════════════════════════════════════════════════════════ */
 .tape {
   position: absolute;
   width: 64px;
   height: 22px;
-  background: rgba(255, 241, 118, 0.75);
-  border: 1px solid rgba(200, 160, 0, 0.3);
+  background: var(--tape-bg);
+  border: 1px solid var(--tape-border);
   border-radius: 3px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  transform: rotate(-3deg);
   pointer-events: none;
   z-index: 10;
+  transition: background 0.35s ease;
 }
 .tape::after {
   content: '';
@@ -39,38 +282,41 @@
   inset: 3px;
   background: repeating-linear-gradient(
     90deg,
-    transparent,
-    transparent 4px,
-    rgba(200,160,0,0.15) 4px,
-    rgba(200,160,0,0.15) 5px
+    transparent, transparent 4px,
+    var(--tape-stripe) 4px, var(--tape-stripe) 5px
   );
   border-radius: 2px;
 }
-.tape-top-left  { top: -10px; left: 24px; transform: rotate(-4deg); }
-.tape-top-right { top: -10px; right: 24px; transform: rotate(4deg); }
-.tape-top-center{ top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+.tape-top-left   { top: -10px; left: 24px;  transform: rotate(-4deg); }
+.tape-top-right  { top: -10px; right: 24px; transform: rotate(4deg); }
+.tape-top-center { top: -10px; left: 50%;   transform: translateX(-50%) rotate(-2deg); }
 
-/* ---------- Scrapbook inputs ---------- */
+/* ══════════════════════════════════════════════════════════
+   INPUTS
+   ══════════════════════════════════════════════════════════ */
 .scrap-input {
-  background: #fffef7;
-  border: 2px solid #b8dfc4;
+  background: var(--input-bg);
+  border: 2px solid var(--input-border);
   border-radius: 10px;
-  color: #2d3a2e;
+  color: var(--input-text);
   font-family: 'Nunito', sans-serif;
   font-size: 0.9rem;
   padding: 0.45rem 0.8rem;
-  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-  width: 100%;
   outline: none;
+  width: 100%;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s,
+              background-color 0.35s ease, color 0.35s ease;
 }
 .scrap-input:focus {
-  border-color: #7ec99a;
+  border-color: var(--input-focus);
   transform: scale(1.02) rotate(0.3deg);
   box-shadow: 0 0 0 3px rgba(126,201,154,0.25);
 }
-.scrap-input::placeholder { color: #9ab09c; }
+.scrap-input::placeholder { color: var(--input-placeholder); }
 
-/* ---------- Scrapbook buttons ---------- */
+/* ══════════════════════════════════════════════════════════
+   BUTTONS
+   ══════════════════════════════════════════════════════════ */
 .scrap-btn {
   cursor: pointer;
   border-width: 2px;
@@ -80,49 +326,60 @@
   font-family: 'Caveat', cursive;
   font-size: 1rem;
   font-weight: 700;
-  color: #2d3a2e;
-  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
-              box-shadow 0.15s,
-              background-color 0.15s;
+  color: var(--btn-text);
   white-space: nowrap;
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.12);
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.15s, background-color 0.2s,
+              border-color 0.2s, color 0.2s;
 }
-.scrap-btn:hover {
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
-}
-.scrap-btn:active {
-  transform: scale(0.93) rotate(-1deg) !important;
-  box-shadow: 1px 1px 0 rgba(0,0,0,0.1);
-}
-.scrap-btn:focus-visible {
-  outline: 3px solid #7ec99a;
-  outline-offset: 2px;
-}
+.scrap-btn:hover  { box-shadow: 4px 4px 0 rgba(0,0,0,0.15); }
+.scrap-btn:active { transform: scale(0.93) rotate(-1deg) !important; box-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
+.scrap-btn:focus-visible { outline: 3px solid var(--input-focus); outline-offset: 2px; }
 
-/* ---------- Task list items ---------- */
+.btn-green  { background-color: var(--btn-green-bg);  border-color: var(--btn-green-border); }
+.btn-green:hover  { background-color: var(--btn-green-hover); }
+
+.btn-yellow { background-color: var(--btn-yellow-bg); border-color: var(--btn-yellow-border); }
+.btn-yellow:hover { background-color: var(--btn-yellow-hover); }
+
+.btn-ghost  { background-color: var(--btn-ghost-bg);  border-color: var(--btn-ghost-border); }
+.btn-ghost:hover  { background-color: var(--btn-ghost-hover); }
+
+/* ══════════════════════════════════════════════════════════
+   TASK LIST
+   ══════════════════════════════════════════════════════════ */
+#task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
 #task-list li {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 0.6rem;
   border-radius: 10px;
-  background: #f4faf6;
-  border: 1.5px solid #b8dfc4;
+  background: var(--task-bg);
+  border: 1.5px solid var(--task-border);
   font-family: 'Nunito', sans-serif;
   font-size: 0.92rem;
-  color: #2d3a2e;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
-              box-shadow 0.2s,
-              background-color 0.15s;
+  color: var(--text-primary);
   animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.2s, background-color 0.2s,
+              border-color 0.35s ease, color 0.35s ease;
 }
 #task-list li:hover {
   transform: translateX(4px) rotate(0.4deg);
-  box-shadow: 3px 3px 0 #b8dfc4;
-  background: #e8f5ec;
+  box-shadow: var(--task-hover-shadow);
+  background: var(--task-hover-bg);
 }
 #task-list li input[type="checkbox"] {
-  accent-color: #3a8f5c;
+  accent-color: var(--text-accent);
   width: 1.1rem;
   height: 1.1rem;
   flex-shrink: 0;
@@ -134,98 +391,118 @@
 .task-text {
   flex: 1;
   word-break: break-word;
-  transition: opacity 0.2s, text-decoration 0.2s;
+  transition: opacity 0.2s, color 0.35s ease;
 }
 .task-text.done {
   text-decoration: line-through;
-  opacity: 0.5;
-  color: #7a9a7c;
+  opacity: 0.45;
+  color: var(--text-secondary);
 }
 
-/* ---------- Link items ---------- */
+/* ══════════════════════════════════════════════════════════
+   LINK ITEMS
+   ══════════════════════════════════════════════════════════ */
+#links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
 .link-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 0.6rem;
   border-radius: 10px;
-  background: #fffde7;
-  border: 1.5px solid #fff176;
+  background: var(--link-bg);
+  border: 1.5px solid var(--link-border);
   font-family: 'Nunito', sans-serif;
   font-size: 0.92rem;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
-              box-shadow 0.2s,
-              background-color 0.15s;
   animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.2s, background-color 0.2s,
+              border-color 0.35s ease;
 }
 .link-item:hover {
   transform: translateX(4px) rotate(0.4deg);
-  box-shadow: 3px 3px 0 #fff176;
-  background: #fff9c4;
+  box-shadow: var(--link-hover-shadow);
+  background: var(--link-hover-bg);
 }
 .link-item a {
   flex: 1;
-  color: #3a8f5c;
+  color: var(--link-color);
   text-decoration: none;
   font-weight: 600;
   word-break: break-all;
   transition: color 0.15s;
 }
-.link-item a:hover { color: #c8a000; text-decoration: underline; }
+.link-item a:hover { color: var(--link-hover-color); text-decoration: underline; }
 
-/* ---------- Small action buttons (edit / delete) ---------- */
+/* ══════════════════════════════════════════════════════════
+   SMALL ACTION BUTTONS
+   ══════════════════════════════════════════════════════════ */
 .btn-edit {
   background: transparent;
-  border: 1.5px solid #b8dfc4;
+  border: 1.5px solid var(--edit-border);
   border-radius: 7px;
-  color: #5a6b5c;
+  color: var(--edit-color);
   padding: 0.2rem 0.5rem;
   font-family: 'Caveat', cursive;
   font-size: 0.9rem;
   cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
-              background-color 0.15s, color 0.15s;
+              background-color 0.15s, color 0.15s, border-color 0.35s ease;
 }
 .btn-edit:hover {
-  background: #d4edda;
-  color: #2d3a2e;
+  background: var(--edit-hover-bg);
+  color: var(--text-primary);
   transform: scale(1.15) rotate(-2deg);
 }
 .btn-edit:active { transform: scale(0.9); }
 
 .btn-delete, .btn-delete-link {
   background: transparent;
-  border: 1.5px solid #ffd0d0;
+  border: 1.5px solid var(--del-border);
   border-radius: 7px;
-  color: #c0706a;
+  color: var(--del-color);
   padding: 0.2rem 0.5rem;
   font-size: 1rem;
   cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
-              background-color 0.15s, color 0.15s;
+              background-color 0.15s, color 0.15s, border-color 0.35s ease;
 }
 .btn-delete:hover, .btn-delete-link:hover {
-  background: #ffe0e0;
-  color: #b91c1c;
+  background: var(--del-hover-bg);
+  color: var(--del-hover-color);
   transform: scale(1.2) rotate(5deg);
 }
 .btn-delete:active, .btn-delete-link:active { transform: scale(0.85) rotate(-5deg); }
 
-/* ---------- Error messages ---------- */
-.error-message { display: none; }
+/* ══════════════════════════════════════════════════════════
+   ERROR MESSAGES
+   ══════════════════════════════════════════════════════════ */
+.error-message { display: none; color: var(--text-error); }
 .error-message.visible { display: block; animation: shake 0.4s ease; }
 
-/* ---------- Scrollbar ---------- */
+/* ══════════════════════════════════════════════════════════
+   SCROLLBAR
+   ══════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f4faf6; }
-::-webkit-scrollbar-thumb { background: #b8dfc4; border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
 
-/* ---------- Keyframes ---------- */
+/* ══════════════════════════════════════════════════════════
+   CANVAS
+   ══════════════════════════════════════════════════════════ */
+#bg-canvas { opacity: var(--canvas-opacity); transition: opacity 0.5s ease; }
+
+/* ══════════════════════════════════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════════════════════════════════ */
 @keyframes popIn {
   0%   { transform: scale(0.75) rotate(-4deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+  100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
 }
 @keyframes shake {
   0%,100% { transform: translateX(0); }
@@ -234,11 +511,3 @@
   60%     { transform: translateX(-3px); }
   80%     { transform: translateX(3px); }
 }
-@keyframes floatPaper {
-  0%   { transform: translateY(0)    rotate(var(--r0)); opacity: 0.85; }
-  50%  { transform: translateY(-18px) rotate(var(--r1)); opacity: 0.7; }
-  100% { transform: translateY(0)    rotate(var(--r0)); opacity: 0.85; }
-}
-
-/* ---------- Canvas background ---------- */
-#bg-canvas { opacity: 0.55; }

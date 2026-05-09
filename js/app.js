@@ -51,7 +51,7 @@ function saveUserName(name) {
 }
 
 function loadTheme() {
-  return localStorage.getItem('pd_theme') || 'dark';
+  return localStorage.getItem('pd_theme') || 'light';
 }
 
 function saveTheme(theme) {
@@ -59,6 +59,11 @@ function saveTheme(theme) {
 }
 
 // ─── THEME ────────────────────────────────────────────────────────────────────
+
+const CANVAS_COLORS = {
+  light: ['#d4edda', '#fff9c4', '#b8dfc4', '#fff176', '#ffffff', '#e8f5ec'],
+  dark:  ['#2e5235', '#3a3010', '#1e3324', '#6b5a00', '#162219', '#2a2510'],
+};
 
 function applyTheme(theme) {
   if (typeof document === 'undefined') return;
@@ -69,15 +74,17 @@ function applyTheme(theme) {
 
 function initTheme() {
   if (typeof document === 'undefined') return;
-  // This design is always light/scrapbook — theme toggle is a no-op placeholder
-  // kept for API compatibility with tests
+  const saved = loadTheme();
+  applyTheme(saved);
   const btn = document.getElementById('btn-theme-toggle');
   if (btn) {
-    btn.textContent = '☀️ Light';
     btn.addEventListener('click', () => {
-      // playful wiggle feedback only
-      btn.classList.add('animate-wiggle');
-      setTimeout(() => btn.classList.remove('animate-wiggle'), 600);
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      saveTheme(next);
+      // Notify canvas to update piece colors
+      document.dispatchEvent(new CustomEvent('themechange', { detail: next }));
     });
   }
 }
@@ -510,10 +517,13 @@ function initCanvas() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  // Paper piece shapes: small rectangles, torn scraps, dots
-  const COLORS = ['#d4edda', '#fff9c4', '#b8dfc4', '#fff176', '#ffffff', '#e8f5ec'];
   const pieces = [];
   const PIECE_COUNT = 28;
+  let currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+  function getColors() {
+    return CANVAS_COLORS[currentTheme] || CANVAS_COLORS.light;
+  }
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -522,29 +532,37 @@ function initCanvas() {
   resize();
   window.addEventListener('resize', resize);
 
-  // Spawn pieces
-  for (let i = 0; i < PIECE_COUNT; i++) {
-    pieces.push(spawnPiece(true));
-  }
-
   function spawnPiece(randomY) {
+    const colors = getColors();
     const w = 28 + Math.random() * 52;
     const h = 18 + Math.random() * 36;
     return {
       x:     Math.random() * window.innerWidth,
       y:     randomY ? Math.random() * window.innerHeight : window.innerHeight + h,
       w, h,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      rot:   (Math.random() - 0.5) * 0.6,          // radians
-      rotV:  (Math.random() - 0.5) * 0.008,         // rotation velocity
-      vx:    (Math.random() - 0.5) * 0.4,           // horizontal drift
-      vy:    -(0.25 + Math.random() * 0.55),         // float upward
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot:   (Math.random() - 0.5) * 0.6,
+      rotV:  (Math.random() - 0.5) * 0.008,
+      vx:    (Math.random() - 0.5) * 0.4,
+      vy:    -(0.25 + Math.random() * 0.55),
       alpha: 0.55 + Math.random() * 0.35,
       type:  Math.random() < 0.3 ? 'circle' : 'rect',
     };
   }
 
-  // Mouse parallax
+  for (let i = 0; i < PIECE_COUNT; i++) {
+    pieces.push(spawnPiece(true));
+  }
+
+  // Re-color pieces when theme changes
+  document.addEventListener('themechange', (e) => {
+    currentTheme = e.detail;
+    const colors = getColors();
+    pieces.forEach(p => {
+      p.color = colors[Math.floor(Math.random() * colors.length)];
+    });
+  });
+
   let mx = 0, my = 0;
   document.addEventListener('mousemove', (e) => {
     mx = (e.clientX / window.innerWidth  - 0.5) * 2;
@@ -557,7 +575,9 @@ function initCanvas() {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rot);
     ctx.fillStyle = p.color;
-    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    ctx.strokeStyle = currentTheme === 'dark'
+      ? 'rgba(255,255,255,0.06)'
+      : 'rgba(0,0,0,0.06)';
     ctx.lineWidth = 1;
     if (p.type === 'circle') {
       ctx.beginPath();
@@ -585,21 +605,15 @@ function initCanvas() {
 
   function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     pieces.forEach((p, i) => {
-      // Gentle parallax nudge from mouse
       p.x += p.vx + mx * 0.12;
       p.y += p.vy + my * 0.08;
       p.rot += p.rotV;
-
-      // Wrap around edges
-      if (p.y < -80)                  { pieces[i] = spawnPiece(false); pieces[i].y = canvas.height + 60; }
-      if (p.x < -80)                  p.x = canvas.width + 60;
-      if (p.x > canvas.width + 80)    p.x = -60;
-
+      if (p.y < -80)                { pieces[i] = spawnPiece(false); pieces[i].y = canvas.height + 60; }
+      if (p.x < -80)                p.x = canvas.width + 60;
+      if (p.x > canvas.width + 80)  p.x = -60;
       drawPiece(p);
     });
-
     requestAnimationFrame(tick);
   }
   tick();
@@ -611,6 +625,7 @@ if (typeof module !== 'undefined') {
   module.exports = {
     state,
     timer,
+    CANVAS_COLORS,
     loadState,
     saveTasks,
     saveLinks,
